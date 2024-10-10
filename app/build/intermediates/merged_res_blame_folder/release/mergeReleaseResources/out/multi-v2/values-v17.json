@@ -4,7 +4,7 @@
             "outputFile": "com.non.nitrixtest.app-mergeReleaseResources-72:/values-v17/values-v17.xml",
             "map": [
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-4/5144f76cf906250a2645a30988053cce/transformed/appcompat-1.6.1/res/values-v17/values-v17.xml",
+                    "source": "/Users/apple/.gradle/caches/transforms-4/4f299575f9ecc5a7b26b0c05d9e4a25c/transformed/appcompat-1.6.1/res/values-v17/values-v17.xml",
                     "from": {
                         "startLines": "2,5,9,12,15,18,22,25,29,33,37,40,43,46,50,53,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

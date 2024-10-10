@@ -6,6 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.non.nitrixtest.data.entities.Movie
+import com.non.nitrixtest.network.response.MediaResponse
+import retrofit2.Call
+import retrofit2.http.GET
 
 @Dao
 interface MovieDao {

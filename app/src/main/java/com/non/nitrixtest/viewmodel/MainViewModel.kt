@@ -1,14 +1,17 @@
 package com.non.nitrixtest.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.exoplayer.ExoPlayer
 import com.non.nitrixtest.data.entities.Movie
 import com.non.nitrixtest.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,40 +21,71 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: MovieRepository
 ) : ViewModel() {
-
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    private val _movieData = MutableLiveData<List<Movie>>()
-    val movieData: LiveData<List<Movie>> = _movieData
+    private val _fetchedMovies = MutableLiveData<List<Movie>>()
+    private val fetchedMovies: LiveData<List<Movie>> = _fetchedMovies
+
+    private val localMovies: LiveData<List<Movie>> = repository.getLocalMovies()
+
+    private var isFetching = false
+
+    var exoPlayer: ExoPlayer? = null
+
+    fun initExoPlayer(context: Context) {
+        if (exoPlayer == null) {
+            exoPlayer = ExoPlayer.Builder(context).build()
+        }
+    }
+
+    val movieData: LiveData<List<Movie>> = MediatorLiveData<List<Movie>>().apply {
+        addSource(localMovies) { localData ->
+            if (localData.isNullOrEmpty()) {
+                fetchMovies()
+            } else {
+                value = localData
+            }
+        }
+        addSource(fetchedMovies) { fetchedData ->
+            if (localMovies.value.isNullOrEmpty()) {
+                value = fetchedData
+            }
+        }
+    }
+
+    private val _currentIndex = MutableLiveData(0)
+    val currentIndex: LiveData<Int> = _currentIndex
 
     fun setCurrentIndex(index: Int) {
         _currentIndex.value = index
     }
 
-    val movies: LiveData<List<Movie>> = repository.getLocalMovies()
-
-    private val _currentIndex = MutableLiveData(0)
-    val currentIndex: LiveData<Int> = _currentIndex
-
-    fun fetchMovies() {
+    private fun fetchMovies() {
+        if (isFetching) return
+        isFetching = true
         viewModelScope.launch {
             try {
-                val movies = withContext(Dispatchers.IO) {
-                    repository.fetchMovies()
-                }
-                _movieData.postValue(movies)
+                val moviesFromApi = repository.fetchMovies()
+                _fetchedMovies.value = moviesFromApi
+                insertMovies(moviesFromApi)
             } catch (e: Exception) {
-                _errorMessage.postValue("Error fetching movies: ${e.message}")
+                _errorMessage.value = "Unable to fetch movies: ${e.message}"
+            } finally {
+                isFetching = false
             }
         }
     }
 
-    fun insertMovies(movies: List<Movie>) {
+    private fun insertMovies(movies: List<Movie>) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertMovies(movies)
+            try {
+                repository.insertMovies(movies)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _errorMessage.value = "Failed to save movies: ${e.message}"
+                }
+            }
         }
     }
-
-
 }

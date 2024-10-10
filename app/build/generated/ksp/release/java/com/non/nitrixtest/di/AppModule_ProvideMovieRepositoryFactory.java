@@ -1,6 +1,6 @@
 package com.non.nitrixtest.di;
 
-import com.google.gson.Gson;
+import com.non.nitrixtest.dao.ApiService;
 import com.non.nitrixtest.dao.MovieDao;
 import com.non.nitrixtest.repository.MovieRepository;
 import dagger.internal.DaggerGenerated;
@@ -27,27 +27,27 @@ import javax.inject.Provider;
     "deprecation"
 })
 public final class AppModule_ProvideMovieRepositoryFactory implements Factory<MovieRepository> {
-  private final Provider<Gson> gsonProvider;
-
   private final Provider<MovieDao> movieDaoProvider;
 
-  public AppModule_ProvideMovieRepositoryFactory(Provider<Gson> gsonProvider,
-      Provider<MovieDao> movieDaoProvider) {
-    this.gsonProvider = gsonProvider;
+  private final Provider<ApiService> apiServiceProvider;
+
+  public AppModule_ProvideMovieRepositoryFactory(Provider<MovieDao> movieDaoProvider,
+      Provider<ApiService> apiServiceProvider) {
     this.movieDaoProvider = movieDaoProvider;
+    this.apiServiceProvider = apiServiceProvider;
   }
 
   @Override
   public MovieRepository get() {
-    return provideMovieRepository(gsonProvider.get(), movieDaoProvider.get());
+    return provideMovieRepository(movieDaoProvider.get(), apiServiceProvider.get());
   }
 
-  public static AppModule_ProvideMovieRepositoryFactory create(Provider<Gson> gsonProvider,
-      Provider<MovieDao> movieDaoProvider) {
-    return new AppModule_ProvideMovieRepositoryFactory(gsonProvider, movieDaoProvider);
+  public static AppModule_ProvideMovieRepositoryFactory create(Provider<MovieDao> movieDaoProvider,
+      Provider<ApiService> apiServiceProvider) {
+    return new AppModule_ProvideMovieRepositoryFactory(movieDaoProvider, apiServiceProvider);
   }
 
-  public static MovieRepository provideMovieRepository(Gson gson, MovieDao movieDao) {
-    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideMovieRepository(gson, movieDao));
+  public static MovieRepository provideMovieRepository(MovieDao movieDao, ApiService apiService) {
+    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideMovieRepository(movieDao, apiService));
   }
 }

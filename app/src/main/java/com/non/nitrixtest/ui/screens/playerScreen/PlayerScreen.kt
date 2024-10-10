@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -37,6 +38,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.R)
 @OptIn(UnstableApi::class)
 @Composable
 fun PlayerScreen(
@@ -47,12 +49,20 @@ fun PlayerScreen(
     val activity = LocalContext.current as Activity
     val movieList by mainViewModel.movieData.observeAsState(emptyList())
     val currentIndex by mainViewModel.currentIndex.observeAsState(0)
-    var playbackPosition by rememberSaveable { mutableLongStateOf(0L) }
-    var playWhenReady by rememberSaveable { mutableStateOf(true) }
     var showControls by remember { mutableStateOf(true) }
-    var isFullscreen by remember { mutableStateOf(false) }
+    var isFullscreen by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var hideControlsJob by remember { mutableStateOf<Job?>(null) }
+    var playbackPosition by rememberSaveable { mutableLongStateOf(0L) }
+    var playWhenReady by rememberSaveable { mutableStateOf(true) }
+
+    val window = activity.window
+    val insetsController = window.insetsController
+
+    val exoPlayer = mainViewModel.exoPlayer ?: run {
+        mainViewModel.initExoPlayer(context)
+        mainViewModel.exoPlayer!!
+    }
 
     val hideControlsAfterDelay = {
         hideControlsJob?.cancel()
@@ -62,27 +72,19 @@ fun PlayerScreen(
         }
     }
 
-    val currentMovie = remember(currentIndex) {
-        movieList.getOrNull(currentIndex)
-    }
-
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            playWhenReady = this.playWhenReady
-            seekTo(playbackPosition)
+    val playerView = remember { PlayerView(context) }.apply {
+        player = exoPlayer
+        useController = false
+        if (Build.VERSION.SDK_INT >= 29) {
+            this.transitionAlpha = 0.5f
         }
     }
 
-
-    val mediaSource = remember(currentMovie?.sources?.firstOrNull()) {
-        currentMovie?.sources?.firstOrNull()?.let {
-            MediaItem.fromUri(Uri.parse(it))
-        }
-    }
-
-    LaunchedEffect(mediaSource) {
-        mediaSource?.let {
-            exoPlayer.setMediaItem(it)
+    LaunchedEffect(Unit) {
+        val currentMovie = mainViewModel.movieData.value?.getOrNull(mainViewModel.currentIndex.value ?: 0)
+        currentMovie?.sources?.firstOrNull()?.let { videoUrl ->
+            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+            exoPlayer.setMediaItem(mediaItem)
             exoPlayer.prepare()
             exoPlayer.seekTo(playbackPosition)
             exoPlayer.playWhenReady = playWhenReady
@@ -93,14 +95,21 @@ fun PlayerScreen(
         onDispose {
             playbackPosition = exoPlayer.currentPosition
             playWhenReady = exoPlayer.playWhenReady
-            exoPlayer.stop()
-            exoPlayer.release()
         }
     }
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        insetsController?.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
+
+        insetsController?.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    } else {
+        @Suppress("DEPRECATION")
         activity.window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE
                 )
+    }
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -145,7 +154,7 @@ fun PlayerScreen(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            // PlayerView for video playback
+
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { context ->
@@ -157,6 +166,11 @@ fun PlayerScreen(
                         }
                     }
                 }
+            )
+
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { playerView }
             )
 
             if (showControls) {
@@ -178,12 +192,12 @@ fun PlayerScreen(
 
             IconButton(
                 onClick = {
+                    isFullscreen = !isFullscreen
+
                     activity.requestedOrientation = if (isFullscreen) {
-                        isFullscreen = false
-                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    } else {
-                        isFullscreen = true
                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    } else {
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                     }
                 },
                 modifier = Modifier

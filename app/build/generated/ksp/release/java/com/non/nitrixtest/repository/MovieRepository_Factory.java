@@ -1,6 +1,6 @@
 package com.non.nitrixtest.repository;
 
-import com.google.gson.Gson;
+import com.non.nitrixtest.dao.ApiService;
 import com.non.nitrixtest.dao.MovieDao;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -25,26 +25,27 @@ import javax.inject.Provider;
     "deprecation"
 })
 public final class MovieRepository_Factory implements Factory<MovieRepository> {
-  private final Provider<Gson> gsonProvider;
+  private final Provider<ApiService> apiServiceProvider;
 
   private final Provider<MovieDao> movieDaoProvider;
 
-  public MovieRepository_Factory(Provider<Gson> gsonProvider, Provider<MovieDao> movieDaoProvider) {
-    this.gsonProvider = gsonProvider;
+  public MovieRepository_Factory(Provider<ApiService> apiServiceProvider,
+      Provider<MovieDao> movieDaoProvider) {
+    this.apiServiceProvider = apiServiceProvider;
     this.movieDaoProvider = movieDaoProvider;
   }
 
   @Override
   public MovieRepository get() {
-    return newInstance(gsonProvider.get(), movieDaoProvider.get());
+    return newInstance(apiServiceProvider.get(), movieDaoProvider.get());
   }
 
-  public static MovieRepository_Factory create(Provider<Gson> gsonProvider,
+  public static MovieRepository_Factory create(Provider<ApiService> apiServiceProvider,
       Provider<MovieDao> movieDaoProvider) {
-    return new MovieRepository_Factory(gsonProvider, movieDaoProvider);
+    return new MovieRepository_Factory(apiServiceProvider, movieDaoProvider);
   }
 
-  public static MovieRepository newInstance(Gson gson, MovieDao movieDao) {
-    return new MovieRepository(gson, movieDao);
+  public static MovieRepository newInstance(ApiService apiService, MovieDao movieDao) {
+    return new MovieRepository(apiService, movieDao);
   }
 }

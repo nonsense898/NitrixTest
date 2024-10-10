@@ -2,12 +2,14 @@ package com.non.nitrixtest.ui.screens.mainScreen
 
 import android.app.Activity
 import android.view.View
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
@@ -18,28 +20,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.non.nitrixtest.R
 import com.non.nitrixtest.viewmodel.MainViewModel
-
 @Composable
 fun MainScreen(navController: NavController, mainViewModel: MainViewModel) {
     val activity = LocalContext.current as Activity
 
-    val movieFetchedList by mainViewModel.movieData.observeAsState(emptyList())
-    val movieLocalList by mainViewModel.movies.observeAsState(emptyList())
-
-    val movieList = movieLocalList.ifEmpty { movieFetchedList }
-
+    val movieList by mainViewModel.movieData.observeAsState(emptyList())
     val errorMessageState = mainViewModel.errorMessage.observeAsState().value
-
-    LaunchedEffect(Unit) {
-        if (movieLocalList.isEmpty()) {
-            mainViewModel.fetchMovies()
-            mainViewModel.insertMovies(movieFetchedList)
-        }
-    }
 
     activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
@@ -50,7 +44,7 @@ fun MainScreen(navController: NavController, mainViewModel: MainViewModel) {
             }
 
             movieList.isEmpty() -> {
-                LoadingView()
+                EmptyMoviePlaceholder()
             }
 
             else -> {
@@ -88,39 +82,26 @@ fun ErrorView(error: String) {
     }
 }
 
+
 @Composable
-fun LoadingView() {
+fun EmptyMoviePlaceholder() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(R.drawable.ic_movie_placeholder),
+            contentDescription = "Empty movie list",
+            modifier = Modifier.size(200.dp),
+            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.inverseSurface)
+        )
+
         Text(
-            text = "Loading...",
-            style = MaterialTheme.typography.headlineSmall
+            text = "No movies available",
+            fontSize = 24.sp,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
-
-//@Composable
-//fun EmptyMoviePlaceholder() {
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        Image(
-//            painter = painterResource(R.drawable.ic_movie_placeholder),
-//            contentDescription = "Empty movie list",
-//            modifier = Modifier.size(200.dp),
-//            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.inverseSurface)
-//        )
-//
-//        Text(
-//            text = "No movies available",
-//            fontSize = 24.sp,
-//            color = MaterialTheme.colorScheme.onSurface
-//        )
-//    }
-//}
 

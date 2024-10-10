@@ -27,6 +27,6 @@
       applicationId="com.non.nitrixtest"
       generatedSourceFolders="build/generated/ksp/release/java:build/generated/ksp/release/kotlin:build/generated/ap_generated_sources/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/Users/apple/.gradle/caches/transforms-4/218c47152cf5594019cc2c0aac646235/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/Users/apple/.gradle/caches/transforms-4/d0d4119db9693fb92ca9360e2e3a840b/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

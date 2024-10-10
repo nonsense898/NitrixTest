@@ -21,5 +21,12 @@ data class Movie(
 
     @ColumnInfo(name = "subtitle")
     val subtitle: String
-)
+) {
+    fun withHttps(): Movie {
+        return copy(
+            sources = sources.map { it.replaceFirst("http://", "https://") },
+            thumb = thumb.replaceFirst("http://", "https://")
+        )
+    }
+}
 

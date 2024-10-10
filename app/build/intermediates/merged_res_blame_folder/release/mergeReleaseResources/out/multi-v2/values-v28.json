@@ -4,18 +4,7 @@
             "outputFile": "com.non.nitrixtest.app-mergeReleaseResources-72:/values-v28/values-v28.xml",
             "map": [
                 {
-                    "source": "/Users/apple/.gradle/caches/transforms-4/5144f76cf906250a2645a30988053cce/transformed/appcompat-1.6.1/res/values-v28/values-v28.xml",
-                    "from": {
-                        "startLines": "2,3,4,8",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,130,217,397",
-                        "endLines": "2,3,7,11",
-                        "endColumns": "74,86,12,12",
-                        "endOffsets": "125,212,392,584"
-                    }
-                },
-                {
-                    "source": "/Users/apple/.gradle/caches/transforms-4/701eb0f953e8a790b78c945115bd9f64/transformed/core-1.6.1/res/values-v28/values.xml",
+                    "source": "/Users/apple/.gradle/caches/transforms-4/a20a8e4805b494467ea4d723904228b0/transformed/core-1.6.1/res/values-v28/values.xml",
                     "from": {
                         "startLines": "4,13",
                         "startColumns": "0,0",
@@ -31,6 +20,17 @@
                         "endLines": "20,29",
                         "endColumns": "8,8",
                         "endOffsets": "1067,1548"
+                    }
+                },
+                {
+                    "source": "/Users/apple/.gradle/caches/transforms-4/4f299575f9ecc5a7b26b0c05d9e4a25c/transformed/appcompat-1.6.1/res/values-v28/values-v28.xml",
+                    "from": {
+                        "startLines": "2,3,4,8",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,130,217,397",
+                        "endLines": "2,3,7,11",
+                        "endColumns": "74,86,12,12",
+                        "endOffsets": "125,212,392,584"
                     }
                 }
             ]

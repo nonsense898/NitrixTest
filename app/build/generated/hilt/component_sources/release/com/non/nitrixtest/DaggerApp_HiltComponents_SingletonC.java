@@ -9,12 +9,17 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
+import com.non.nitrixtest.dao.ApiService;
 import com.non.nitrixtest.dao.MovieDao;
 import com.non.nitrixtest.database.AppDatabase;
+import com.non.nitrixtest.di.AppModule_ProvideApiServiceFactory;
 import com.non.nitrixtest.di.AppModule_ProvideAppDatabaseFactory;
 import com.non.nitrixtest.di.AppModule_ProvideGsonFactory;
 import com.non.nitrixtest.di.AppModule_ProvideMovieDaoFactory;
 import com.non.nitrixtest.di.AppModule_ProvideMovieRepositoryFactory;
+import com.non.nitrixtest.di.AppModule_ProvideOkHttpClientFactory;
+import com.non.nitrixtest.di.AppModule_ProvideRetrofitFactory;
 import com.non.nitrixtest.repository.MovieRepository;
 import com.non.nitrixtest.viewmodel.MainViewModel;
 import com.non.nitrixtest.viewmodel.MainViewModel_HiltModules;
@@ -44,6 +49,8 @@ import dagger.internal.Preconditions;
 import dagger.internal.Provider;
 import java.util.Map;
 import java.util.Set;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 @DaggerGenerated
 @SuppressWarnings({
@@ -568,6 +575,14 @@ public final class DaggerApp_HiltComponents_SingletonC {
 
     private Provider<MovieDao> provideMovieDaoProvider;
 
+    private Provider<Gson> provideGsonProvider;
+
+    private Provider<OkHttpClient> provideOkHttpClientProvider;
+
+    private Provider<Retrofit> provideRetrofitProvider;
+
+    private Provider<ApiService> provideApiServiceProvider;
+
     private Provider<MovieRepository> provideMovieRepositoryProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
@@ -580,6 +595,10 @@ public final class DaggerApp_HiltComponents_SingletonC {
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 2));
       this.provideMovieDaoProvider = DoubleCheck.provider(new SwitchingProvider<MovieDao>(singletonCImpl, 1));
+      this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 5));
+      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 6));
+      this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 4));
+      this.provideApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<ApiService>(singletonCImpl, 3));
       this.provideMovieRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MovieRepository>(singletonCImpl, 0));
     }
 
@@ -617,13 +636,25 @@ public final class DaggerApp_HiltComponents_SingletonC {
       public T get() {
         switch (id) {
           case 0: // com.non.nitrixtest.repository.MovieRepository 
-          return (T) AppModule_ProvideMovieRepositoryFactory.provideMovieRepository(AppModule_ProvideGsonFactory.provideGson(), singletonCImpl.provideMovieDaoProvider.get());
+          return (T) AppModule_ProvideMovieRepositoryFactory.provideMovieRepository(singletonCImpl.provideMovieDaoProvider.get(), singletonCImpl.provideApiServiceProvider.get());
 
           case 1: // com.non.nitrixtest.dao.MovieDao 
           return (T) AppModule_ProvideMovieDaoFactory.provideMovieDao(singletonCImpl.provideAppDatabaseProvider.get());
 
           case 2: // com.non.nitrixtest.database.AppDatabase 
           return (T) AppModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 3: // com.non.nitrixtest.dao.ApiService 
+          return (T) AppModule_ProvideApiServiceFactory.provideApiService(singletonCImpl.provideRetrofitProvider.get());
+
+          case 4: // retrofit2.Retrofit 
+          return (T) AppModule_ProvideRetrofitFactory.provideRetrofit(singletonCImpl.provideGsonProvider.get(), singletonCImpl.provideOkHttpClientProvider.get());
+
+          case 5: // com.google.gson.Gson 
+          return (T) AppModule_ProvideGsonFactory.provideGson();
+
+          case 6: // okhttp3.OkHttpClient 
+          return (T) AppModule_ProvideOkHttpClientFactory.provideOkHttpClient();
 
           default: throw new AssertionError(id);
         }
