@@ -11,7 +11,6 @@ import com.non.nitrixtest.data.entities.Movie
 import com.non.nitrixtest.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -37,6 +36,12 @@ class MainViewModel @Inject constructor(
         if (exoPlayer == null) {
             exoPlayer = ExoPlayer.Builder(context).build()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        exoPlayer?.release()
+        exoPlayer = null
     }
 
     val movieData: LiveData<List<Movie>> = MediatorLiveData<List<Movie>>().apply {

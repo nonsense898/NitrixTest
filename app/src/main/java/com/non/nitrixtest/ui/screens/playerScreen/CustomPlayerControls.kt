@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -73,6 +74,11 @@ fun CustomPlayerControls(
     Column(modifier = modifier.fillMaxWidth()) {
         val validDuration = if (duration > 0) duration else 0L
         val validPosition = if (currentPosition <= validDuration) currentPosition else 0L
+
+        Text(
+            text = "${formatDuration(currentPosition)} / ${formatDuration(duration)}",
+            color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
 
         Slider(
             modifier = Modifier
