@@ -1,4 +1,4 @@
-#Thu Oct 10 21:47:41 EEST 2024
+#Fri Oct 11 12:00:34 EEST 2024
 base.0=/Users/apple/AndroidStudioProjects/NitrixTest/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
 base.1=/Users/apple/AndroidStudioProjects/NitrixTest/app/build/intermediates/dex/release/mergeDexRelease/classes2.dex
 base.2=/Users/apple/AndroidStudioProjects/NitrixTest/app/build/intermediates/dex/release/mergeDexRelease/classes3.dex

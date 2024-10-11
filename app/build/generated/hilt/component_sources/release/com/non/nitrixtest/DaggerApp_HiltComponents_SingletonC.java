@@ -453,15 +453,15 @@ public final class DaggerApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_non_nitrixtest_viewmodel_NetworkViewModel = "com.non.nitrixtest.viewmodel.NetworkViewModel";
-
       static String com_non_nitrixtest_viewmodel_MainViewModel = "com.non.nitrixtest.viewmodel.MainViewModel";
 
-      @KeepFieldType
-      NetworkViewModel com_non_nitrixtest_viewmodel_NetworkViewModel2;
+      static String com_non_nitrixtest_viewmodel_NetworkViewModel = "com.non.nitrixtest.viewmodel.NetworkViewModel";
 
       @KeepFieldType
       MainViewModel com_non_nitrixtest_viewmodel_MainViewModel2;
+
+      @KeepFieldType
+      NetworkViewModel com_non_nitrixtest_viewmodel_NetworkViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

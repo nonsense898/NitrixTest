@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Build
 import android.view.View
+import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -144,6 +145,13 @@ fun PlayerScreen(
             playbackPosition = exoPlayer.currentPosition
             playWhenReady = exoPlayer.playWhenReady
         }
+    }
+
+    BackHandler {
+        playbackPosition = exoPlayer.currentPosition
+        playWhenReady = exoPlayer.playWhenReady
+        exoPlayer.stop()
+        navController.popBackStack()
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
