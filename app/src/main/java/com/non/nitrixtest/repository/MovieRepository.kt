@@ -1,7 +1,7 @@
 package com.non.nitrixtest.repository
 
 import androidx.lifecycle.LiveData
-import com.non.nitrixtest.dao.ApiService
+import com.non.nitrixtest.network.ApiService
 import com.non.nitrixtest.dao.MovieDao
 import com.non.nitrixtest.data.entities.Movie
 import kotlinx.coroutines.Dispatchers

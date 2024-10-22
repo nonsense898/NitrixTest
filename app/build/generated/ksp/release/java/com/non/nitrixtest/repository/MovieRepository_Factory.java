@@ -1,6 +1,6 @@
 package com.non.nitrixtest.repository;
 
-import com.non.nitrixtest.dao.ApiService;
+import com.non.nitrixtest.network.ApiService;
 import com.non.nitrixtest.dao.MovieDao;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;

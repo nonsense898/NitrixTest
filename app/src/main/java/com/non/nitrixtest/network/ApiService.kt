@@ -1,4 +1,4 @@
-package com.non.nitrixtest.dao
+package com.non.nitrixtest.network
 
 import com.non.nitrixtest.network.response.MediaResponse
 import retrofit2.http.GET

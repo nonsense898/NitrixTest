@@ -4,10 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.non.nitrixtest.dao.ApiService
+import com.non.nitrixtest.network.ApiService
 import com.non.nitrixtest.dao.MovieDao
 import com.non.nitrixtest.database.AppDatabase
-import com.non.nitrixtest.network.response.MediaResponse
 import com.non.nitrixtest.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
@@ -17,11 +16,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 import java.lang.reflect.Type
 import javax.inject.Singleton
 
